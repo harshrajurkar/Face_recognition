@@ -51,7 +51,7 @@
     <div>
         {% for person in metadata %}
         <div class="person-container">
-            <img src="{% static 'images/' %}{{ person.filename }}" alt="{{ person.name }}">
+            <img src="{{ person.image.url }}" alt="{{ person.name }}">
             <div class="person-info">
                 <p><strong>Name:</strong> {{ person.name }}</p>
                 <p><strong>Address:</strong> {{ person.address }}</p>
@@ -59,6 +59,12 @@
             </div>
         </div>
         {% endfor %}
+        {% if metadata %}
+        <!-- Render metadata -->
+        {% else %}
+        <p>No metadata available.</p>
+        {% endif %}
+
     </div>
 </body>
 

@@ -11,8 +11,12 @@ from . import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("upload/", views.upload_page, name="upload_page"),
+    # path("upload/", views.upload_page, name="upload_page"),
+    # path('upload/', views.match_faces, name='upload'),
+   
+    path('upload/', views.upload_page, name='upload_page'),
     path('metadata/', views.metadata_display, name='metadata_display'),
+
 ] 
 
 if settings.DEBUG:

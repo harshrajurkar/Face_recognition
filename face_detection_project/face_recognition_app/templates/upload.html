@@ -128,12 +128,21 @@
     {% if results %}
     <div class="results-container">
         <h2>Matching Results:</h2>
-        {% for result in results %}
+        {% if results %}
         <div>
-            <p><strong>Name:</strong> {{ result.name }}</p>
-            <p><strong>Similarity:</strong> {{ result.similarity }}%</p>
+            {% for result in results %}
+            <div>
+                <p><strong>Name:</strong> {{ result.name }}</p>
+                <p><strong>Address:</strong> {{ result.address }}</p>
+                <p><strong>Gender:</strong> {{ result.gender }}</p>
+                <p><strong>Similarity:</strong> {{ result.similarity }}%</p>
+                <img src="{{ result.image_url }}" alt="Matched Image" width="100" height="100">
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <p>No matching results found.</p>
+        {% endif %}
     </div>
     {% endif %}
 </body>
