@@ -1,0 +1,31 @@
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment folders
+.venv/
+venv/
+env/
+
+# Django-specific files and folders
+*.log
+*.sqlite3
+db.sqlite3
+media/
+static/
+
+# Operating System files (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# IDE or Editor files
+.vscode/
+.idea/
+
+# Environment variable file (for sensitive settings like API keys)
+.env
+
+# Local Django settings file (if you're using different settings for local dev)
+local_settings.py
+

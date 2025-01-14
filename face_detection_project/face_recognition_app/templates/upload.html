@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+</head>
+
+<body>
+    <h1>Upload Image</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="image">Choose an image to upload:</label>
+        <input type="file" name="image" id="image" accept="image/*">
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+
+    <!-- Link to go to the Metadata Display page -->
+    <a href="{% url 'metadata_display' %}">View Metadata</a>
+</body>
+
+</html>

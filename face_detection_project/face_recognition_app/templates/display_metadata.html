@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metadata Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .person-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .person-container img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .person-info {
+            font-size: 16px;
+        }
+
+        .person-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    {% load static %}
+    <h1>Metadata Display</h1>
+    <!-- Link to upload page -->
+    <a href="{% url 'upload_page' %}">Go to Upload Page</a>
+    <div>
+        {% for person in metadata %}
+        <div class="person-container">
+            <img src="{% static 'images/' %}{{ person.filename }}" alt="{{ person.name }}">
+            <div class="person-info">
+                <p><strong>Name:</strong> {{ person.name }}</p>
+                <p><strong>Address:</strong> {{ person.address }}</p>
+                <p><strong>Gender:</strong> {{ person.gender }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
