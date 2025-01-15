@@ -38,7 +38,7 @@ def parse_metadata_from_filename(filename):
 
 def store_dataset_encodings(dataset_folder):
     """
-    Reads all images in `dataset_folder`, processes face encodings,
+    Reads all images in dataset_folder, processes face encodings,
     and updates the metadata file in static/metadata.json.
     """
     metadata = load_metadata()

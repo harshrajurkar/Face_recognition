@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
-import time  
 import numpy as np
 from face_recognition_app.utils import load_metadata, store_dataset_encodings
 from .models import Person
@@ -26,7 +25,7 @@ def upload_page(request):
             uploaded_image = request.FILES["image"]
             logger.info(f"Received file: {uploaded_image.name}")
             
-            fs = FileSystemStorage()
+            fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # Save to MEDIA_ROOT
             filename = fs.save(uploaded_image.name, uploaded_image)
             file_path = fs.path(filename)
             
@@ -46,11 +45,13 @@ def upload_page(request):
 
                     if match[0]:
                         similarity_percentage = (1 - similarity) * 100  # Convert to percentage
+                        
+                        # Add filename path relative to MEDIA_URL
                         results.append({
                             "name": entry["name"],
                             "address": entry["address"],
                             "gender": entry["gender"],
-                            "filename": entry["filename"],
+                            "filename": f"{settings.MEDIA_URL}{entry['filename']}",
                             "similarity": round(similarity_percentage, 2)
                         })
 
@@ -66,6 +67,7 @@ def upload_page(request):
         context["error_message"] = "An unexpected error occurred. Please try again later."
 
     return render(request, "upload.html", context)
+
 def metadata_display(request):
     metadata_path = os.path.join(settings.BASE_DIR, 'face_recognition_app', 'static', 'metadata.json')
     
