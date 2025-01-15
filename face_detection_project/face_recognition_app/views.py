@@ -48,17 +48,17 @@ def upload_page(request):
                         
                         # Add filename path relative to MEDIA_URL
                         results.append({
-                            "name": entry["name"],
-                            "address": entry["address"],
-                            "gender": entry["gender"],
-                            "filename": f"{settings.MEDIA_URL}{entry['filename']}",
-                            "similarity": round(similarity_percentage, 2)
-                        })
-
+    "name": entry["name"],
+    "address": entry["address"],
+    "gender": entry["gender"],
+    "filename": f"{settings.STATIC_URL}images/{entry['filename']}",
+    "similarity": round(similarity_percentage, 2)
+})
                 if results:
-                    context["results"] = sorted(results, key=lambda x: x["similarity"], reverse=True)
+                  context["results"] = sorted(results, key=lambda x: x["similarity"], reverse=True)
                 else:
                     context["error_message"] = "No matching faces found in the dataset."
+
 
             else:
                 context["error_message"] = "No faces detected. Please upload a valid image."
