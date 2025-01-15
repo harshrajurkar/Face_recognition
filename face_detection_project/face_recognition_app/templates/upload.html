@@ -12,26 +12,44 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
         }
 
         h1 {
             text-align: center;
             color: #333;
+            margin-top: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 30px;
         }
 
         .form-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 20px;
             text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
-        button {
+        .form-container input[type="file"] {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+
+        .form-container button {
             background-color: #007BFF;
             color: #fff;
             padding: 12px 20px;
@@ -39,30 +57,60 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
         }
 
-        button:hover {
+        .form-container button:hover {
             background-color: #0056b3;
+        }
+
+        .reset-button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .reset-button:hover {
+            background-color: #c82333;
+        }
+
+        .message,
+        .error-message {
+            font-size: 18px;
+            margin-top: 15px;
+            text-align: center;
         }
 
         .message {
             color: #28a745;
-            font-size: 18px;
-            margin-top: 15px;
         }
 
         .error-message {
             color: red;
-            font-size: 18px;
-            margin-top: 15px;
         }
 
-        .results-container,
-        .encoding-container {
-            margin-top: 30px;
+        .results-container {
+            margin-top: 20px;
             background-color: #f1f1f1;
             padding: 15px;
+            border-radius: 5px;
+        }
+
+        .results-container div {
+            margin-bottom: 15px;
+        }
+
+        .results-container img {
+            width: 100px;
+            height: 130px;
+            object-fit: cover;
+            border: 1px solid #ccc;
             border-radius: 5px;
         }
 
@@ -86,10 +134,41 @@
                 transform: rotate(360deg);
             }
         }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .form-container input[type="file"] {
+                width: 100%;
+            }
+
+            .form-container button {
+                width: 100%;
+            }
+
+            .reset-button {
+                position: static;
+                margin: 15px auto;
+                display: block;
+            }
+        }
     </style>
     <script>
         function showSpinner() {
             document.getElementById("spinner").style.display = "block";
+        }
+
+        function resetForm() {
+            // Reset form and hide results
+            document.getElementById("upload-form").reset();
+            document.getElementById("results-container").style.display = "none";
+            document.getElementById("uploaded-image").style.display = "none";
+            document.getElementById("search-form").style.display = "none";
+            document.getElementById("message").style.display = "none";
+            document.getElementById("error-message").style.display = "none";
+            document.getElementById("spinner").style.display = "none";
         }
     </script>
 </head>
@@ -97,53 +176,56 @@
 <body>
     <h1>Upload Image for Face Recognition</h1>
 
-    <div class="form-container">
-        <form method="POST" enctype="multipart/form-data" onsubmit="showSpinner()">
-            {% csrf_token %}
-            <label for="image">Choose an image to upload:</label>
-            <input type="file" name="image" id="image" accept="image/*" required>
-            <button type="submit">Upload Image</button>
-        </form>
+    <div class="container">
+        <button type="button" class="reset-button" onclick="resetForm()">Reset</button>
 
-        {% if message %}
-        <p class="message">{{ message }}</p>
-        {% endif %}
-        {% if error_message %}
-        <p class="error-message">{{ error_message }}</p>
-        {% endif %}
+        <div class="form-container">
+            <form method="POST" enctype="multipart/form-data" id="upload-form" onsubmit="showSpinner()">
+                {% csrf_token %}
+                <label for="image">Choose an image to upload:</label>
+                <input type="file" name="image" id="image" accept="image/*" required>
+                <button type="submit">Upload Image</button>
+            </form>
 
-        {% if face_encoding %}
-        <div class="encoding-container">
-            <h2>Face Encoding:</h2>
-            <pre>{{ face_encoding }}</pre>
+            {% if message %}
+            <p class="message" id="message">{{ message }}</p>
+            {% endif %}
+            {% if error_message %}
+            <p class="error-message" id="error-message">{{ error_message }}</p>
+            {% endif %}
+
+            {% if face_encoding %}
+            <div class="encoding-container">
+                <h2>Face Encoding:</h2>
+                <pre>{{ face_encoding }}</pre>
+            </div>
+            {% endif %}
+
+            {% if uploaded_image %}
+            <form method="POST" action="{% url 'upload_page' %}" id="search-form" onsubmit="showSpinner()">
+                {% csrf_token %}
+                <button type="submit" name="search_button" value="search">Search for Matching Results</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+
+        {% if results %}
+        <div class="results-container" id="results-container">
+            <h2>Matching Results:</h2>
+            {% for result in results %}
+            <div>
+                <p>Name: {{ result.name }}</p>
+                <p>Address: {{ result.address }}</p>
+                <p>Gender: {{ result.gender }}</p>
+                <p>Similarity: {{ result.similarity }}%</p>
+                <img src="{{ result.filename }}" alt="{{ result.name }}" />
+            </div>
+            {% endfor %}
         </div>
         {% endif %}
-
-        {% if uploaded_image %}
-        <form method="POST" action="{% url 'upload_page' %}" onsubmit="showSpinner()">
-            {% csrf_token %}
-            <button type="submit" name="search_button" value="search">Search for Matching Results</button>
-        </form>
-        {% endif %}
     </div>
-
-    <div class="spinner" id="spinner"></div>
-
-    {% if results %}
-    <div class="results-container">
-        <h2>Matching Results:</h2>
-        {% for result in results %}
-        <div>
-            <p>Name: {{ result.name }}</p>
-            <p>Address: {{ result.address }}</p>
-            <p>Gender: {{ result.gender }}</p>
-            <p>Similarity: {{ result.similarity }}%</p>
-            <img src="{{ result.filename }}" alt="{{ result.name }}"
-                style="width: 100px; height: 130px; object-fit: cover; border: 1px solid #ccc; border-radius: 5px;" />
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
 </body>
 

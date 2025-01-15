@@ -8,7 +8,10 @@ urlpatterns = [
     # path('upload/', views.match_faces, name='upload'),
    
     path('upload/', views.upload_page, name='upload_page'),
-    path('metadata/', views.metadata_display, name='metadata_display'),
+    # path('metadata/', views.metadata_display, name='metadata_display'),
+    path('show_all_data/', views.show_all_data, name='show_all_data'),
+    path('display_metadata/', views.display_metadata, name='display_metadata'),
+
 
 ] 
 

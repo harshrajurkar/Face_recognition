@@ -68,15 +68,24 @@ def upload_page(request):
 
     return render(request, "upload.html", context)
 
-def metadata_display(request):
-    metadata_path = os.path.join(settings.BASE_DIR, 'face_recognition_app', 'static', 'metadata.json')
-    
+def display_metadata(request):
+    # Path to the metadata.json file
+    metadata_path = os.path.join(settings.BASE_DIR, 'static', 'metadata.json')
+
+    # Read the metadata file
     try:
         with open(metadata_path, 'r') as f:
             metadata = json.load(f)
     except FileNotFoundError:
-        metadata = []  # If the file does not exist, return an empty list
-    except json.JSONDecodeError:
-        metadata = []  # If the file is empty or malformed, return an empty list
+        metadata = []
+
+    return render(request, 'display_metadata.html', {'metadata': metadata})
+
 
     return render(request, 'metadata_display.html', {'metadata': metadata})
+def show_all_data(request):
+    # Fetch all records from the database
+    all_records = Person.objects.all()
+    
+    # Pass records to the template
+    return render(request, 'display_metadata.html', {'all_records': all_records})

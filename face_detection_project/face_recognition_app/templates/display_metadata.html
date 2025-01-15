@@ -40,18 +40,39 @@
         .person-info p {
             margin: 5px 0;
         }
+
+        .all-data-container {
+            margin-top: 30px;
+        }
+
+        .show-all-data-link {
+            display: inline-block;
+            margin: 10px 0;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .show-all-data-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
-    {% load static %}
     <h1>Metadata Display</h1>
+
     <!-- Link to upload page -->
     <a href="{% url 'upload_page' %}">Go to Upload Page</a>
-    <div>
+
+    <!-- Link to show all data -->
+    <a href="javascript:void(0);" class="show-all-data-link" onclick="showAllData()">Show All Data</a>
+
+    <!-- Display the metadata if available -->
+    <div class="person-container" id="metadata-container" style="display:none;">
+        {% if metadata %}
         {% for person in metadata %}
         <div class="person-container">
-            <img src="{{ person.image.url }}" alt="{{ person.name }}">
+            <img src="{{ person.image_url }}" alt="{{ person.name }}">
             <div class="person-info">
                 <p><strong>Name:</strong> {{ person.name }}</p>
                 <p><strong>Address:</strong> {{ person.address }}</p>
@@ -59,13 +80,21 @@
             </div>
         </div>
         {% endfor %}
-        {% if metadata %}
-        <!-- Render metadata -->
         {% else %}
         <p>No metadata available.</p>
         {% endif %}
-
     </div>
+
+    <script>
+        function showAllData() {
+            var container = document.getElementById("metadata-container");
+            if (container.style.display === "none") {
+                container.style.display = "block";
+            } else {
+                container.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
